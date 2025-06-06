@@ -64,10 +64,19 @@ const game_controller = (() => {
 
   let current_player = players[0];
 
-  const playRound = () => {
-    console.log(`Now is turn of ${current_player.getName()}`);
+  const changeCurrentPlayer = () => {
+    current_player = current_player === players[0] ? players[1] : players[0];
+  }
 
+  const playRound = (index) => {
+    if ((index < 0 || index > 8) || !index) {
+      console.log("Wrong index number || 0 - 8");
+      return;
+    }
+    console.log(`Now is turn of ${current_player.getName()}`);
+    gameboard.placeMark(index, current_player);
     gameboard.printBoard();
+    changeCurrentPlayer();
   }
 
   return { playRound };
