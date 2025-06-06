@@ -2,8 +2,16 @@ const gameboard = (() => {
   const board = [];
 
   const placeMark = (index, player) => {
+    if (isAlreadyMarked(index)) {
+      return false;
+    }
     board[index] = player.getMark();
-  };
+    return true;
+  }
+
+  const isAlreadyMarked = (index) => {
+    return board[index] !== 0;
+  }
 
   const getBoard = () => {
     return board;
@@ -74,7 +82,11 @@ const game_controller = (() => {
       return;
     }
     console.log(`Now is turn of ${current_player.getName()}`);
-    gameboard.placeMark(index, current_player);
+
+    if (!gameboard.placeMark(index, current_player)) {
+      console.log("Already marked try again!");
+      return;
+    }
     gameboard.printBoard();
     changeCurrentPlayer();
   }
