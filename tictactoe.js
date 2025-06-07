@@ -126,11 +126,18 @@ const game_controller = (() => {
   }
 
   const playRound = (index) => {
+  /*
+   *   returns
+   *  -2 = wrong index
+   *  -1 = already marked
+   *   0 = current player win
+   *   1 = draw
+   *   2 = legal move, game goes on
+  */
     if ((index < 0 || index > 8)) {
       console.log("Wrong index number || 0 - 8");
       return -2;
     }
-    console.log(`Now is turn of ${current_player.getName()}`);
 
     if (!gameboard.placeMark(index, current_player)) {
       console.log("Already marked try again!");
@@ -138,18 +145,21 @@ const game_controller = (() => {
     }
 
     ++moves;
-
     gameboard.printBoard();
     if (gameboard.checkWin()) {
-      console.log(`Congratz ${current_player.getName()}`);
       current_player.addScore();
+      gameboard.resetBoard();
+      moves = 0;
       return 0;
     }
+
     if (moves === 9) {
-      console.log("Draw");
+      gameboard.resetBoard();
+      moves = 0;
       return 1;
     }
     changeCurrentPlayer();
+    return 2;
   }
 
   const resetGame = () => {
@@ -168,6 +178,12 @@ const display_controller = (() => {
   const board_grid = document.querySelector(".board-grid");
 
   const renderGame = () => {
+    renderMarks();
+    renderScores();
+    renderCurrentPlayer();
+  };
+
+  const renderMarks = () => {
     const cells = document.querySelectorAll(".cell");
     const board = gameboard.getBoard();
     for (let i = 0; i < board.length; ++i) {
@@ -181,21 +197,18 @@ const display_controller = (() => {
         mark.textContent = "";
       }
     }
-
-    renderScores();
-    renderCurrentPlayer();
-  };
+  }
 
   const renderScores = () => {
     const score = document.querySelectorAll(".score");
     const players = game_controller.getPlayers();
-
     score[0].textContent = `${players[0].getName()}: ${players[0].getScore()}`;
     score[1].textContent = `${players[1].getName()}: ${players[1].getScore()}`;
   }
 
   const renderCurrentPlayer = () => {
     const current_player_div = document.querySelector(".current-player");
+    current_player_div.textContent = game_controller.getCurrentPlayer().getName();
   }
 
   const clickHandlerOperations = (event) => {
@@ -204,7 +217,6 @@ const display_controller = (() => {
       game_controller.resetGame();
       renderGame();
     }
-    console.log(button);
   }
 
   const clickHandlerBoard = (event) => {
@@ -214,12 +226,30 @@ const display_controller = (() => {
       return;
     }
     const game_state = game_controller.playRound(selected_cell);
+    switch (game_state) {
+      case 0:
+        renderWin();
+        break;
+      case 1:
+        renderDraw();
+        break;
+      default:
+        break;
+    }
+
     renderGame();
   }
 
-  renderGame();
+  const renderDraw = () => {
+
+  }
+
+  const renderWin = () => {
+  }
 
   buttons.addEventListener("click", clickHandlerOperations);
   board_grid.addEventListener("click", clickHandlerBoard);
+
+  renderGame();
 })();
 
