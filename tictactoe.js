@@ -145,7 +145,6 @@ const game_controller = (() => {
     }
 
     ++moves;
-    gameboard.printBoard();
     if (gameboard.checkWin()) {
       current_player.addScore();
       gameboard.resetBoard();
