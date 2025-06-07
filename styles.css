@@ -17,10 +17,10 @@ body {
 
 .game-container {
   margin-top: 20px;
-  max-width: 500px;
+  max-width: 550px;
   grid-area: 1 / 2 / 2 / 3;
   display: grid;
-  grid-template-rows: 1.5rem 2rem 1fr;
+  grid-template-rows: 2rem 2rem 1fr 2rem;
   gap: 20px;
 }
 
@@ -42,6 +42,33 @@ body {
   background-color: #556073; 
 }
 
+.dialog-set-name {
+  justify-self: center;
+  top: 5vh;
+
+  min-width: 200px;
+  padding: 20px;
+
+  border-radius: 10px;
+}
+
+.dialog-set-name form {
+  display: grid;
+  grid-template-rows: 1fr 2rem;
+  gap: 10px;
+}
+
+.dialog-set-name form .inputs {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+}
+
+.dialog-set-name form .buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 .scores {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -50,28 +77,13 @@ body {
   font-weight: bold;
 }
 
-.to-move {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-items: center;
-
-  gap: 5px;
-}
-
-.turn-text {
-  justify-self: end;
-}
-
-.to-move .current-player {
-  justify-self: start;
-}
-
 .player {
   display: grid;
   justify-items: center;
 }
 
 .board-grid {
+  min-height: 200px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
@@ -105,3 +117,10 @@ body {
   font-size: 4rem;
 }
 
+.game-result {
+  display: grid;
+  justify-items: center;
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: bold;
+}

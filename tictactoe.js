@@ -199,6 +199,18 @@ const display_controller = (() => {
     }
   }
 
+  const renderResult = (game_result) => {
+    const result_div = document.querySelector(".game-result");
+    let result = "Result of last round: ";
+    if (game_result === 0) {
+      const player = game_controller.getCurrentPlayer().getName();
+      result += `win for ${player}`
+    } else {
+      result += "draw";
+    }
+    result_div.textContent = result;
+  }
+
   const renderScores = () => {
     const score = document.querySelectorAll(".score");
     const players = game_controller.getPlayers();
@@ -208,7 +220,21 @@ const display_controller = (() => {
 
   const renderCurrentPlayer = () => {
     const current_player_div = document.querySelector(".current-player");
-    current_player_div.textContent = game_controller.getCurrentPlayer().getName();
+    current_player_div.textContent = `Turn: ${game_controller.getCurrentPlayer().getName()}`;
+  }
+
+  const renderSetNameMenu = () => {
+    const dialog = document.querySelector(".dialog-set-name");
+    dialog.showModal();
+  }
+
+  const setPlayersNames = () => {
+    const form = document.querySelector(".set-name-form");
+    const player1_name = form.querySelector("#player1").value;
+    const player2_name = form.querySelector("#player2").value;
+    const players = game_controller.getPlayers();
+    players[0].setName(player1_name);
+    players[1].setName(player2_name);
   }
 
   const clickHandlerOperations = (event) => {
@@ -216,6 +242,13 @@ const display_controller = (() => {
     if (button === "restart") {
       game_controller.resetGame();
       renderGame();
+      document.querySelector(".game-result").textContent = "";
+    } else if (button === "set-name") {
+      renderSetNameMenu();
+    } else if (button === "submit") {
+      setPlayersNames();
+      renderScores();
+      renderCurrentPlayer();
     }
   }
 
@@ -226,25 +259,11 @@ const display_controller = (() => {
       return;
     }
     const game_state = game_controller.playRound(selected_cell);
-    switch (game_state) {
-      case 0:
-        renderWin();
-        break;
-      case 1:
-        renderDraw();
-        break;
-      default:
-        break;
+    if (game_state === 0 || game_state === 1) {
+      renderResult(game_state);
     }
 
     renderGame();
-  }
-
-  const renderDraw = () => {
-
-  }
-
-  const renderWin = () => {
   }
 
   buttons.addEventListener("click", clickHandlerOperations);
