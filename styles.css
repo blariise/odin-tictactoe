@@ -16,10 +16,59 @@ body {
 }
 
 .game-container {
+  margin-top: 20px;
   max-width: 500px;
   grid-area: 1 / 2 / 2 / 3;
   display: grid;
-  grid-template-rows: 3rem 3rem 1fr;
+  grid-template-rows: 1.5rem 2rem 1fr;
+  gap: 20px;
+}
+
+.inputs {
+  display: grid;
+  justify-items: center;
+}
+
+.buttons button {
+  padding: 4px;
+  background-color: #232830;
+  border: 2px solid #FFFFFF;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+.buttons button:hover {
+  background-color: #556073; 
+}
+
+.scores {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.to-move {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+
+  gap: 5px;
+}
+
+.turn-text {
+  justify-self: end;
+}
+
+.to-move .name {
+  justify-self: start;
+}
+
+.player {
+  display: grid;
+  justify-items: center;
 }
 
 .board-grid {
