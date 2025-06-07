@@ -70,6 +70,19 @@ function createPlayer(name, mark) {
 
   let m_name = "";
   let m_mark = "";
+  let m_score = 0;
+
+  const addScore = () => {
+    m_score += 1;
+  }
+
+  const getScore = () => {
+    return m_score;
+  }
+
+  const resetScore = () => {
+    m_score = 0;
+  }
 
   const setName = (name) => {
     m_name = name;
@@ -89,12 +102,12 @@ function createPlayer(name, mark) {
 
   setName(name);
   setMark(mark);
-  return { setName, getName, setMark, getMark };
+  return { setName, getName, setMark, getMark, addScore, getScore, resetScore };
 }
 
 const game_controller = (() => {
-  const player1 = createPlayer("player1", 1);
-  const player2 = createPlayer("player2", 2);
+  const player1 = createPlayer("Player1", 1);
+  const player2 = createPlayer("Player2", 2);
   const players = [ player1, player2 ];
 
   let current_player = players[0];
@@ -102,6 +115,14 @@ const game_controller = (() => {
 
   const changeCurrentPlayer = () => {
     current_player = current_player === players[0] ? players[1] : players[0];
+  }
+
+  const getCurrentPlayer = () => {
+    return current_player;
+  }
+
+  const getPlayers = () => {
+    return players;
   }
 
   const playRound = (index) => {
@@ -121,7 +142,7 @@ const game_controller = (() => {
     gameboard.printBoard();
     if (gameboard.checkWin()) {
       console.log(`Congratz ${current_player.getName()}`);
-
+      current_player.addScore();
       return 0;
     }
     if (moves === 9) {
@@ -135,12 +156,15 @@ const game_controller = (() => {
     gameboard.resetBoard();
     moves = 0;
     current_player = players[0];
+    players[0].resetScore();
+    players[1].resetScore();
   }
 
-  return { playRound, resetGame };
+  return { playRound, resetGame, getCurrentPlayer, getPlayers };
 })();
 
 const display_controller = (() => {
+  const buttons = document.querySelector(".buttons");
   const board_grid = document.querySelector(".board-grid");
 
   const renderGame = () => {
@@ -148,14 +172,40 @@ const display_controller = (() => {
     const board = gameboard.getBoard();
     for (let i = 0; i < board.length; ++i) {
       const mark = cells[i].querySelector(".mark");
-      console.log(board[i]);
+
       if (board[i] === 1) {
         mark.textContent = "✕";
       } else if (board[i] === 2) {
         mark.textContent = "○";
-      } 
+      } else {
+        mark.textContent = "";
+      }
     }
+
+    renderScores();
+    renderCurrentPlayer();
   };
+
+  const renderScores = () => {
+    const score = document.querySelectorAll(".score");
+    const players = game_controller.getPlayers();
+
+    score[0].textContent = `${players[0].getName()}: ${players[0].getScore()}`;
+    score[1].textContent = `${players[1].getName()}: ${players[1].getScore()}`;
+  }
+
+  const renderCurrentPlayer = () => {
+    const current_player_div = document.querySelector(".current-player");
+  }
+
+  const clickHandlerOperations = (event) => {
+    const button = event.target.dataset.action;
+    if (button === "restart") {
+      game_controller.resetGame();
+      renderGame();
+    }
+    console.log(button);
+  }
 
   const clickHandlerBoard = (event) => {
     const selected_cell = event.target.dataset.id;
@@ -166,7 +216,10 @@ const display_controller = (() => {
     const game_state = game_controller.playRound(selected_cell);
     renderGame();
   }
+
   renderGame();
+
+  buttons.addEventListener("click", clickHandlerOperations);
   board_grid.addEventListener("click", clickHandlerBoard);
 })();
 

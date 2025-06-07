@@ -62,7 +62,7 @@ body {
   justify-self: end;
 }
 
-.to-move .name {
+.to-move .current-player {
   justify-self: start;
 }
 
