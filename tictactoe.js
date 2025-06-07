@@ -120,11 +120,13 @@ const game_controller = (() => {
 
     gameboard.printBoard();
     if (gameboard.checkWin()) {
-      console.log(`Congratz ${current_player}`);
+      console.log(`Congratz ${current_player.getName()}`);
+      resetGame();
       return;
     }
     if (moves === 9) {
       console.log("Draw");
+      resetGame();
       return;
     }
     changeCurrentPlayer();
