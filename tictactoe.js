@@ -93,8 +93,8 @@ function createPlayer(name, mark) {
 }
 
 const game_controller = (() => {
-  const player1 = createPlayer("player1", "x");
-  const player2 = createPlayer("player2", "o");
+  const player1 = createPlayer("player1", 1);
+  const player2 = createPlayer("player2", 2);
   const players = [ player1, player2 ];
 
   let current_player = players[0];
@@ -107,13 +107,13 @@ const game_controller = (() => {
   const playRound = (index) => {
     if ((index < 0 || index > 8)) {
       console.log("Wrong index number || 0 - 8");
-      return;
+      return -2;
     }
     console.log(`Now is turn of ${current_player.getName()}`);
 
     if (!gameboard.placeMark(index, current_player)) {
       console.log("Already marked try again!");
-      return;
+      return -1;
     }
 
     ++moves;
@@ -121,13 +121,12 @@ const game_controller = (() => {
     gameboard.printBoard();
     if (gameboard.checkWin()) {
       console.log(`Congratz ${current_player.getName()}`);
-      resetGame();
-      return;
+
+      return 0;
     }
     if (moves === 9) {
       console.log("Draw");
-      resetGame();
-      return;
+      return 1;
     }
     changeCurrentPlayer();
   }
@@ -139,5 +138,35 @@ const game_controller = (() => {
   }
 
   return { playRound, resetGame };
+})();
+
+const display_controller = (() => {
+  const board_grid = document.querySelector(".board-grid");
+
+  const renderGame = () => {
+    const cells = document.querySelectorAll(".cell");
+    const board = gameboard.getBoard();
+    for (let i = 0; i < board.length; ++i) {
+      const mark = cells[i].querySelector(".mark");
+      console.log(board[i]);
+      if (board[i] === 1) {
+        mark.textContent = "✕";
+      } else if (board[i] === 2) {
+        mark.textContent = "○";
+      } 
+    }
+  };
+
+  const clickHandlerBoard = (event) => {
+    const selected_cell = event.target.dataset.id;
+
+    if (!selected_cell) {
+      return;
+    }
+    const game_state = game_controller.playRound(selected_cell);
+    renderGame();
+  }
+  renderGame();
+  board_grid.addEventListener("click", clickHandlerBoard);
 })();
 
